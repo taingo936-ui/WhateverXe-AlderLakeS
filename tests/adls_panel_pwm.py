@@ -100,7 +100,8 @@ int main(int argc,char**argv){
   if(bad==9)wells=0;if(bad==10)period=~0U;if(bad==11){period=0;s.firmwarePorts.panel.pwmHz=0;}
   if(bad==14)field<uint32_t>(port,0x550)=3;if(bad==15)s.xeProfile.family=XELP::Family::TigerLake;
   if(bad==12)control=~0U;if(bad==13){period=0;strap=~0U;}
-  assert(XE::wrapADLSLightUpEDP(ctl,nullptr,nullptr,nullptr)==kIOReturnNotReady&&nativeLight==0&&writes==0&&get==put&&!refs);
+  // LOQ HX fallback: failed PWM validation does not suppress native eDP light-up.
+  assert(XE::wrapADLSLightUpEDP(ctl,nullptr,nullptr,nullptr)==0x1234&&nativeLight==1&&writes==0&&get==put&&!refs);
  }
  XE s;setup(s);assert(XE::wrapADLSLightUpEDP(ctl,nullptr,nullptr,nullptr)==0x1234&&nativeLight==1&&field<uint32_t>(ctl,0xe60)==120000);
  assert(get==put&&get==1&&!refs);const auto capturedReads=reads;
